@@ -1,0 +1,29 @@
+
+# Ignore all environment files at every level
+**/.env
+**/.env.*
+
+# Allow example environment files
+!**/.env.example
+
+# Ignore node_modules in all folders
+**/node_modules/
+
+# Ignore build folders
+**/dist/
+**/build/
+
+# Ignore logs
+**/*.log
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore editor settings
+.vscode/
+.idea/
+
+# Ignore Google Cloud service account credentials
+**/serviceAccountKey.json
+**/*service-account*.json

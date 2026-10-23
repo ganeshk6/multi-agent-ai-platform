@@ -28,8 +28,6 @@ function Sidebar() {
         const data = await createConversations();
         dispatch(addConversation(data));
     }
-
-    console.log(userData)
     
     if (collapse) {
         return (

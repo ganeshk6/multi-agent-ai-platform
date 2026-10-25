@@ -77,7 +77,7 @@ function Sidebar() {
                             onError={()=>setimageError(true)} 
                         />
                     ):(
-                        <div className='w-9 h-9 rounded-[10px] object-cover border-2 border-indigo-500/25'>
+                        <div className='w-9 h-9 rounded-[10px] object-cover border-2 border-indigo-500/25 flex justify-center items-center'>
                             <User size={15} className='text-slate-400' />
                         </div>
                     )}
@@ -162,7 +162,7 @@ function Sidebar() {
                                         onError={()=>setimageError(true)} 
                                     />
                                 ):(
-                                    <div className='w-9 h-9 rounded-[10px] object-cover border-2 border-indigo-500/25'>
+                                    <div className='w-9 h-9 rounded-[10px] object-cover border-2 border-indigo-500/25 flex justify-center items-center'>
                                         <User size={15} className='text-slate-400' />
                                     </div>
                                 )}

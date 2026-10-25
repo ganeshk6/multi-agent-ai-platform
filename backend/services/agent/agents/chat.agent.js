@@ -1,67 +1,92 @@
-import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages";
-import { getModel } from "../config/llmModels.js"
+import {
+    AIMessage,
+    HumanMessage,
+    SystemMessage
+} from "@langchain/core/messages";
+
+import { getModel } from "../config/llmModels.js";
 import { getMemory } from "../config/memory.js";
 
-export const chatAgent = async(state) => {
-    const llm = await getModel("chat")
-    const history = await getMemory(state.conversationId);
-    const searchContext = state.searchResult ? `
-    Web Search Results:
+export const chatAgent = async (state) => {
+    try {
+        const llm = await getModel("chat");
+        const history = await getMemory(state.conversationId);
 
-    ${JSON.stringify(state.searchResult)}
+        const searchContext = state.searchResult
+            ? `
+                Web Search Results:
+                ${JSON.stringify(state.searchResult)}
 
-    Answer the user using only the above search results.
-    ` :"";
+                Use these search results to answer the user's question.
+                Do not generate, describe, or return image URLs.
+                `
+            : "";
 
-    const systemPrompt = `
+        const systemPrompt = `
         You are Orvexa, an intelligent AI assistant.
 
-
         ${searchContext}
-        If searchContext exists:
-
-        - Use search results to answer.
-        - Do not mention internal tools.
 
         Rules:
-        - For simple questions, greetings and short queries, respond naturally in plan text.
-        - For technical, educational, coding or detailed topics, use clean Markdown.
-        
-        Formatting:
-        - Use # for titles and ## for sections.
-        - Leave a blank line after headings.
-        - Use bullent points for lists.
-        - Use numbered lists for steps.
-        - Use fenced code blocks with language tags for code.
+        - For simple questions and greetings, respond naturally in plain text.
+        - For technical, educational, coding, or detailed topics, use clean Markdown.
+        - If search results exist, use them to answer the user's question.
+        - Do not mention internal tools.
+        - Do not return image URLs in your text response.
+        - Use headings, lists, and fenced code blocks when appropriate.
         - Keep paragraphs short and readable.
-        - Never write headings and content on the same line.
-        - Never generate large walls of text.
-    `;
+        - Avoid unnecessarily long answers.
+        `;
 
-    const messages = [
-        new SystemMessage(systemPrompt)
-    ]
+        const messages = [
+            new SystemMessage(systemPrompt)
+        ];
 
-    const chatHistory = Array.isArray(history)
-        ? history
-        : Array.isArray(history?.array)
-            ? history.array
-            : [];
+        const chatHistory = Array.isArray(history)
+            ? history
+            : Array.isArray(history?.array)
+                ? history.array
+                : [];
 
-    chatHistory.forEach((msg) => {
-        if (msg.role === "user") {
-            messages.push(new HumanMessage(msg.content));
-        } else if (msg.role === "assistant") {
-            messages.push(new AIMessage(msg.content));
+        chatHistory.slice(-10).forEach((msg) => {
+            if (
+                !msg ||
+                typeof msg.content !== "string"
+            ) {
+                return;
+            }
+
+            if (msg.role === "user") {
+                messages.push(new HumanMessage(msg.content));
+            } else if (msg.role === "assistant") {
+                messages.push(new AIMessage(msg.content));
+            }
+        });
+
+        // Pass the actual user query, not the system prompt.
+        if (
+            typeof state.prompt !== "string" ||
+            !state.prompt.trim()
+        ) {
+            throw new Error("User prompt is missing or invalid.");
         }
-    });
-    
-    messages.push(new HumanMessage(systemPrompt))
 
-    const response = await llm.invoke(messages)
+        messages.push(new HumanMessage(state.prompt));
 
-    return {
-        ...state,
-        aiResponse:response.content
+        const response = await llm.invoke(messages);
+
+        return {
+            ...state,
+            aiResponse:
+                typeof response.content === "string"
+                    ? response.content
+                    : JSON.stringify(response.content),
+            images: state.images ?? []
+        };
+
+    } catch (error) {
+        console.error("Chat agent error:", error);
+
+        throw error;
     }
-}
+};

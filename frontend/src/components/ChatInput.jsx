@@ -35,7 +35,7 @@ const ChatInput = () => {
         dispatch(addMessage({role:"user", content:value.trim()}))
         setvalue("")
         const data = await sendMessages(payload)
-        dispatch(addMessage({role:"assistant", content:data.answer, images:data.images}))
+        dispatch(addMessage({role:"assistant", content:data?.answer, images:data?.images}))
         console.log(data)
     }
 

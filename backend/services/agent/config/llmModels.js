@@ -2,7 +2,7 @@ import { ChatGroq } from "@langchain/groq"
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai"
 
 const groq = new ChatGroq({
-    model: "openai/gpt-oss-120b",
+    model: "openai/gpt-oss-20b",
     apiKey:process.env.GROQ_API_KEY
 })
 

@@ -1,1 +1,46 @@
 @import "tailwindcss";
+
+/* 
+.markdown-content pre code.hljs {
+  display: block;
+  overflow-x: visible;
+  padding: 0;
+  background: transparent;
+  color: #d4d4d8;
+}
+
+.markdown-content .hljs {
+  color: #d4d4d8;
+  background: transparent;
+}
+
+.markdown-content .hljs-keyword,
+.markdown-content .hljs-selector-tag,
+.markdown-content .hljs-literal {
+  color: #c4b5fd;
+}
+
+.markdown-content .hljs-string,
+.markdown-content .hljs-attr {
+  color: #86efac;
+}
+
+.markdown-content .hljs-title,
+.markdown-content .hljs-function {
+  color: #93c5fd;
+}
+
+.markdown-content .hljs-number,
+.markdown-content .hljs-symbol {
+  color: #fdba74;
+}
+
+.markdown-content .hljs-comment {
+  color: #71717a;
+  font-style: italic;
+}
+
+.markdown-content .hljs-built_in,
+.markdown-content .hljs-type {
+  color: #67e8f9;
+} */

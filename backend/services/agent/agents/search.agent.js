@@ -5,14 +5,22 @@ export const searchAgent = async(state) => {
         const results = await searchTool.invoke({
             query:state.prompt
         })
-        
+        const webResults = Array.isArray(results)
+            ? results
+            : Array.isArray(results?.results)
+                ? results.results
+                : [];
+
+        const images = Array.isArray(results?.images)
+            ? results.images
+            : [];
+
         return {
             ...state,
-            searchResult:results,
-            images:results.images
-        }
+            searchResult: webResults,
+            images,
+        };
     } catch (error) {
-        console.log(`tavily search error ${error}`)
         return {
             ...state,
             searchResult:[],

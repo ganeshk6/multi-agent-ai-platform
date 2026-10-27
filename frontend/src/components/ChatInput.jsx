@@ -3,7 +3,7 @@ import React from 'react'
 import { useState } from 'react'
 import { sendMessages } from '../features/sendMessages';
 import { useDispatch, useSelector } from 'react-redux';
-import { addMessage } from '../redux/messageSlice';
+import { addMessage, setArtifacts } from '../redux/messageSlice';
 import { createConversations } from '../features/createConversations';
 import { addConversation, setConvTitle, setSelectConversation } from '../redux/conversationSlice';
 import { updateConversation } from '../features/updateConversation';
@@ -35,6 +35,7 @@ const ChatInput = () => {
         dispatch(addMessage({role:"user", content:value.trim()}))
         setvalue("")
         const data = await sendMessages(payload)
+        dispatch(setArtifacts(data?.artifacts || []))
         dispatch(addMessage({role:"assistant", content:data?.answer, images:data?.images}))
         console.log(data)
     }

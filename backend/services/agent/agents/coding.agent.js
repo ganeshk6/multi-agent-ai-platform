@@ -47,6 +47,12 @@ export const codingAgent = async(state) => {
         - Beautiful spacing
         - Single page unless user ask otherwise.
 
+        IMAGES
+
+        Always use real Unsplash images.
+
+        Never use placeholders.
+
         Return ONLY valid JSON.
 
         Schema:
@@ -82,6 +88,7 @@ export const codingAgent = async(state) => {
         `
 
         const response = await llm.invoke(prompt);
+        console.log(response);
         const data = JSON.parse(response.content);
 
         return {
@@ -91,6 +98,7 @@ export const codingAgent = async(state) => {
                 {
                     id:Date.now(),
                     type:"Project",
+                    title:state.prompt,
                     files:data?.files || []
                 }
             ]
